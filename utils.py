@@ -1,15 +1,19 @@
+
 import codecs
 import os
 import numpy as np
-import re
+import cPickle
 
 class DataLoader():
-    def __init__(self, data_dir, batch_size, encoding='utf-8', test=False):
+    def __init__(self, data_dir, save_dir, batch_size, encoding='utf-8', test=False):
         self.data_dir = data_dir
         self.batch_size = batch_size
         self.encoding = encoding
 
-        self.x, self.y = self.preprocess(data_dir)
+        x_file = os.path.join(data_dir, 'train.in')
+        y_file = os.path.join(data_dir, 'GENE.eval')
+        vocab_file = os.path.join(save_dir, "vocab.pkl")
+        self.x, self.y = self.preprocess(data_dir, vocab_file)
 
         self.create_batches()
         self.reset_batch_pointer()
@@ -20,7 +24,7 @@ class DataLoader():
 
         return target_embedding, mutation_embedding
 
-    def preprocess(self, data_dir):
+    def preprocess(self, data_dir, vocab_file):
         x_text = os.path.join(data_dir, 'train.in')
         y_text = os.path.join(data_dir, 'GENE.eval')
 
@@ -39,8 +43,13 @@ class DataLoader():
 
         x_text_lines = [l.strip() for l in open(x_text).readlines()]
         max_sequence_length = max([len(x.split(' ')) for x in x_text_lines]) - 1 # -1:id token
-        vocab_size = 1  # the first vocab : 'NONE'
-        vocab_dict = dict()
+
+        if not (os.path.exists(vocab_file)):
+            vocab_dict = dict()
+            vocab_size = 1  # the first vocab : 'NONE'
+        else:
+            vocab_dict = cPickle.load(open(vocab_file))
+            vocab_size = len(vocab_dict.keys())
 
         for l in x_text_lines:
             tokens = l.split(' ')
@@ -92,6 +101,7 @@ class DataLoader():
                 bio[start_tag] = [1, 0, 0]
             y_list.append(bio)
 
+        cPickle.dump(vocab_dict, open(vocab_file, 'w'))
         self.vocab_size = vocab_size
         self.max_sequence_length = max_sequence_length
         return (np.array(x_list), np.array(y_list))
@@ -109,7 +119,7 @@ class DataLoader():
         xdata = xdata[:self.num_batches * self.batch_size * self.max_sequence_length]
         ydata = ydata[:self.num_batches * self.batch_size * self.max_sequence_length * 3]
 
-        print self.num_batches, self.batch_size, self.max_sequence_length
+        print(self.num_batches, self.batch_size, self.max_sequence_length)
 
         self.x_batches = np.split(xdata.reshape(self.batch_size, -1), self.num_batches, 1)
         self.y_batches = np.split(ydata.reshape(self.batch_size, -1, 3), self.num_batches, 1)
@@ -123,6 +133,9 @@ class DataLoader():
 
     def reset_batch_pointer(self):
         self.pointer = 0
+
+    def full_batch(self):
+        return self.x, self.y
 
 if __name__ == '__main__':
     pass

@@ -1,7 +1,7 @@
 
+from __future__ import print_function
 import numpy as np
 import tensorflow as tf
-
 import argparse
 import time
 import os
@@ -11,7 +11,7 @@ from utils import DataLoader
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--data_dir', type=str, default='res/BioCreative2GM/train/', help='data directory')
-    parser.add_argument('--restore', type=str, default=None, help='ckpt file path')
+    parser.add_argument('--restore', type=str, default=None, help='ckpt file name')
     parser.add_argument('--save_dir', type=str, default='logs/', help='ckpt file path')
     parser.add_argument('--batch_size', type=int, default=128, help='data directory')
     parser.add_argument('--num_epochs', type=int, default=10, help='num_epoch')
@@ -23,7 +23,7 @@ def main():
     train(args)
 
 def train(args):
-    data_loader = DataLoader(args.data_dir, args.batch_size)
+    data_loader = DataLoader(args.data_dir, args.save_dir, args.batch_size)
 
     args.vocab_size = data_loader.vocab_size
     args.seq_length = data_loader.max_sequence_length
@@ -68,6 +68,7 @@ def train(args):
                     checkpoint_path = os.path.join(args.save_dir, 'model.ckpt')
                     saver.save(sess, checkpoint_path, global_step = e * data_loader.num_batches + b)
                     print("model saved to {}".format(checkpoint_path))
+
 
 if __name__ == '__main__':
     main()
