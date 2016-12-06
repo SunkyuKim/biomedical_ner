@@ -10,7 +10,7 @@ class DataLoader():
         self.batch_size = batch_size
         self.encoding = encoding
 
-        x_file = os.path.join(data_dir, 'train.in')
+        x_file = os.path.join(data_dir, 'text.in')
         y_file = os.path.join(data_dir, 'GENE.eval')
         vocab_file = os.path.join(save_dir, "vocab.pkl")
         self.x, self.y = self.preprocess(data_dir, vocab_file)
@@ -25,7 +25,7 @@ class DataLoader():
         return target_embedding, mutation_embedding
 
     def preprocess(self, data_dir, vocab_file):
-        x_text = os.path.join(data_dir, 'train.in')
+        x_text = os.path.join(data_dir, 'text.in')
         y_text = os.path.join(data_dir, 'GENE.eval')
 
         # make offset dictionary for setence id

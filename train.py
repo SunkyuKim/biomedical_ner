@@ -37,8 +37,10 @@ def train(args):
         assert os.path.isdir(args.init_from), " %s must be a a path" % args.init_from
 
     model = Model(args)
-
-    with tf.Session() as sess:
+    
+    config = tf.ConfigProto()
+    config.gpu_options.allow_growth = True
+    with tf.Session(config=config) as sess:
         tf.initialize_all_variables().run()
         saver = tf.train.Saver()
         train_writer = tf.train.SummaryWriter(os.path.join(args.save_dir, 'train'), sess.graph)

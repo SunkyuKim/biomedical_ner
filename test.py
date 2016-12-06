@@ -11,7 +11,7 @@ from utils import DataLoader
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--data_dir', type=str, default='res/BioCreative2GM/test/', help='data directory')
-    parser.add_argument('--restore', type=str, default=None, help='ckpt file path')
+    parser.add_argument('--restore', type=str, default='None', help='ckpt file path')
     parser.add_argument('--save_dir', type=str, default='logs/', help='ckpt file path')
     parser.add_argument('--batch_size', type=int, default=128, help='data directory')
     parser.add_argument('--num_epochs', type=int, default=10, help='num_epoch')
@@ -29,16 +29,20 @@ def test(args):
     args.embedding = np.random.uniform(-10, 10, [args.vocab_size, args.seq_length])
     args.embedding[0] = np.zeros(args.seq_length)
 
+    x, y = data_loader.full_batch()
+    args.batch_size = x.shape[0]
+
     model = Model(args)
 
-    sess = tf.Session()
+    config = tf.ConfigProto()
+    config.gpu_options.allow_growth = True
+    sess = tf.Session(config=config)
 
     saver = tf.train.Saver()
     saver.restore(sess, os.path.join(args.save_dir, args.restore))
 
-    tf.initialize_all_variables().run()
+    #tf.initialize_all_variables().run()
     start = time.time()
-    x, y = data_loader.full_batch()
     feed = {model.input_data: x, model.targets: y}
 
     prediction, loss = sess.run([model.prediction, model.loss], feed)
@@ -46,6 +50,14 @@ def test(args):
 
     print("test_loss = {:.3f}, time = {:.3f}"
           .format(loss, end-start))
+    tag(prediction)
+
+def tag(prediction):
+    o = []
+    for p_s in prediction:
+        o.append([list(p).index(max(p)) for p in p_s])
+    for oo in o[:10]:
+        print(oo[:30])
 
 if __name__ == '__main__':
     main()
