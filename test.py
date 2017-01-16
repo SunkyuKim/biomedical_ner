@@ -6,7 +6,8 @@ import argparse
 import time
 import os
 from model import Model
-from utils import DataLoader
+# from utils import DataLoader
+from utils_best import DataLoader
 import procname
 
 def main():

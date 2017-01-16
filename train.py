@@ -13,7 +13,7 @@ import procname
 def main():
     parser = argparse.ArgumentParser()
     # parser.add_argument('--data_dir', type=str, default='res/BioCreative2GM/train/', help='data directory')
-    parser.add_argument('--data_dir', type=str, default='res/Pubmed/', help='data directory')
+    parser.add_argument('--data_dir', type=str, default='res/Pubmed/train/', help='data directory')
     parser.add_argument('--restore', type=str, default=None, help='ckpt file name')
     parser.add_argument('--save_dir', type=str, default='logs/pubmed/', help='ckpt file path')
     parser.add_argument('--batch_size', type=int, default=1000, help='data directory')

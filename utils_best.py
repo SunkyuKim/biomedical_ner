@@ -68,7 +68,7 @@ class DataLoader():
         return text_tokens, label_tokens
 
     def preprocess(self, data_dir, vocab_file):
-        pubmed_data = os.path.join(data_dir, "data.txt")
+        pubmed_data = os.path.join(data_dir, "text.txt")
 
         if not (os.path.exists(vocab_file)):
             vocab_dict, label_dict = self.build_vocab()
