@@ -6,17 +6,20 @@ import argparse
 import time
 import os
 from model import Model
-from utils import DataLoader
+# from utils import DataLoader
+from utils_best import DataLoader
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--data_dir', type=str, default='res/BioCreative2GM/train/', help='data directory')
+    # parser.add_argument('--data_dir', type=str, default='res/BioCreative2GM/train/', help='data directory')
+    parser.add_argument('--data_dir', type=str, default='res/Pubmed/', help='data directory')
     parser.add_argument('--restore', type=str, default=None, help='ckpt file name')
     parser.add_argument('--save_dir', type=str, default='logs/', help='ckpt file path')
-    parser.add_argument('--batch_size', type=int, default=128, help='data directory')
+    parser.add_argument('--batch_size', type=int, default=100, help='data directory')
     parser.add_argument('--num_epochs', type=int, default=10, help='num_epoch')
     parser.add_argument('--rnn_size', type=int, default=100, help='output nodes of rnn')
-    parser.add_argument('--class_size', type=int, default=3, help='class size')
+    # parser.add_argument('--class_size', type=int, default=3, help='class size')
+    parser.add_argument('--class_size', type=int, default=17, help='class size')
     parser.add_argument('--save_every', type=int, default=100, help='save per iteration')
 
     args = parser.parse_args()
@@ -41,9 +44,9 @@ def train(args):
     config = tf.ConfigProto()
     config.gpu_options.allow_growth = True
     with tf.Session(config=config) as sess:
-        tf.initialize_all_variables().run()
+        tf.global_variables_initializer().run()
         saver = tf.train.Saver()
-        train_writer = tf.train.SummaryWriter(os.path.join(args.save_dir, 'train'), sess.graph)
+        train_writer = tf.summary.FileWriter(os.path.join(args.save_dir, 'train'), sess.graph)
 
         if args.restore is not None:
             pass
@@ -70,7 +73,7 @@ def train(args):
                     checkpoint_path = os.path.join(args.save_dir, 'model.ckpt')
                     saver.save(sess, checkpoint_path, global_step = e * data_loader.num_batches + b)
                     print("model saved to {}".format(checkpoint_path))
-
+        train_writer.close()
 
 if __name__ == '__main__':
     main()
