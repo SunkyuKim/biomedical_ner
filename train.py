@@ -8,6 +8,7 @@ import os
 from model import Model
 # from utils import DataLoader
 from utils_best import DataLoader
+import procname
 
 def main():
     parser = argparse.ArgumentParser()
@@ -23,6 +24,7 @@ def main():
     parser.add_argument('--save_every', type=int, default=100, help='save per iteration')
 
     args = parser.parse_args()
+    procname.setprocname("NER_Pubmed_TRAIN")
     train(args)
 
 def train(args):

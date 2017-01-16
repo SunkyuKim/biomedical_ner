@@ -7,6 +7,7 @@ import time
 import os
 from model import Model
 from utils import DataLoader
+import procname
 
 def main():
     parser = argparse.ArgumentParser()
@@ -19,6 +20,7 @@ def main():
     parser.add_argument('--class_size', type=int, default=3, help='class size')
 
     args = parser.parse_args()
+    procname.setprocname("NER_Pubmed_TEST")
     test(args)
 
 def test(args):
