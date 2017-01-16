@@ -15,8 +15,8 @@ def main():
     # parser.add_argument('--data_dir', type=str, default='res/BioCreative2GM/train/', help='data directory')
     parser.add_argument('--data_dir', type=str, default='res/Pubmed/', help='data directory')
     parser.add_argument('--restore', type=str, default=None, help='ckpt file name')
-    parser.add_argument('--save_dir', type=str, default='logs/', help='ckpt file path')
-    parser.add_argument('--batch_size', type=int, default=100, help='data directory')
+    parser.add_argument('--save_dir', type=str, default='logs/pubmed/', help='ckpt file path')
+    parser.add_argument('--batch_size', type=int, default=1000, help='data directory')
     parser.add_argument('--num_epochs', type=int, default=10, help='num_epoch')
     parser.add_argument('--rnn_size', type=int, default=100, help='output nodes of rnn')
     # parser.add_argument('--class_size', type=int, default=3, help='class size')
@@ -63,7 +63,7 @@ def train(args):
 
                 train_loss, _, summary = sess.run([model.loss, model.train_op, model.merged], feed)
                 end = time.time()
-                train_writer.add_summary(summary)
+                train_writer.add_summary(summary, global_step=e * data_loader.num_batches + b)
 
                 print("{}/{} (epoch {}), train_loss = {:.3f}, time/batch = {:.3f}"
                       .format(e * data_loader.num_batches + b,
