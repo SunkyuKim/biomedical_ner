@@ -61,18 +61,19 @@ def tag(prediction, x_text, y_text, label_dict):
     for p_s in prediction:
         o.append([list(p).index(max(p)) for p in p_s])
 
+    fw = open("result.txt", "w")
     for i in range(len(o)):
         x_l = x_text[i]
         y_l = y_text[i]
         o_l = o[i]
-        print(len(x_l), len(y_l), len(o_l))
         for j in range(len(x_l)):
             if o_l[j] != 10:
                 o_l_text = 'NONE'
                 for k in label_dict:
                     if np.argmax(np.array(label_dict[k])) == o_l[j]:
                         o_l_text = k
-                print(x_l[j], y_l[j], o_l_text)
-
+                fw.write(",".join([x_l[j], y_l[j], o_l_text]))
+                fw.write("\n")
+    fw.close()
 if __name__ == '__main__':
     main()
