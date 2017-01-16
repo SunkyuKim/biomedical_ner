@@ -87,6 +87,8 @@ class DataLoader():
             x_text.append(tokens)
             y_text.append(label)
 
+        self.x_text = x_text
+        self.y_text = y_text
         self.max_sequence_length = max(map(len, x_text))
 
         """
