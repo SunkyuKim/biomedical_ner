@@ -76,7 +76,7 @@ class DataLoader():
             vocab_dict, label_dict = pickle.load(open(vocab_file))
 
         vocab_size = len(vocab_dict.keys())
-        self.vocab_size = vocab_size
+        self.vocab_size = vocab_size + 1
 
         ls = open(pubmed_data).readlines()
 
