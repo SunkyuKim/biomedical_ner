@@ -69,7 +69,7 @@ def tag(prediction, x_text, y_text, label_dict):
             if o_l[j] != 10:
                 o_l_text = 'NONE'
                 for k in label_dict:
-                    if label_dict[k] == o_l[j]:
+                    if np.argmax(np.array(label_dict[k])) == o_l[j]:
                         o_l_text = k
                 print(x_l[j], y_l[j], o_l_text)
 
