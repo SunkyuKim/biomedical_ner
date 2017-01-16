@@ -65,8 +65,9 @@ def tag(prediction, x_text, y_text):
         x_l = x_text[i]
         y_l = y_text[i]
         o_l = o[i]
-        print(o_l)
-        break
+        for j in range(len(o_l)):
+            if o_l[j] != 10:
+                print(x_l[j], y_l[j])
 
 if __name__ == '__main__':
     main()
