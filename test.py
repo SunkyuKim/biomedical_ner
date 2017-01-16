@@ -54,9 +54,9 @@ def test(args):
 
     print("test_loss = {:.3f}, time = {:.3f}"
           .format(loss, end-start))
-    tag(prediction, data_loader.x_text, data_loader.y_text)
+    tag(prediction, data_loader.x_text, data_loader.y_text, data_loader.label_dict)
 
-def tag(prediction, x_text, y_text):
+def tag(prediction, x_text, y_text, label_dict):
     o = []
     for p_s in prediction:
         o.append([list(p).index(max(p)) for p in p_s])
@@ -67,7 +67,11 @@ def tag(prediction, x_text, y_text):
         o_l = o[i]
         for j in range(len(o_l)):
             if o_l[j] != 10:
-                print(x_l[j], y_l[j])
+                o_l_text = 'NONE'
+                for k in label_dict:
+                    if label_dict[k] == o_l[j]:
+                        o_l_text = k
+                print(x_l[j], y_l[j], o_l_text)
 
 if __name__ == '__main__':
     main()

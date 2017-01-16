@@ -77,6 +77,8 @@ class DataLoader():
 
         vocab_size = len(vocab_dict.keys())
         self.vocab_size = vocab_size + 1
+        self.vocab_dict = vocab_dict
+        self.label_dict = label_dict
 
         ls = open(pubmed_data).readlines()
 
