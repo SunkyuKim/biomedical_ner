@@ -66,7 +66,7 @@ def tag(prediction, x_text, y_text, label_dict):
         y_l = y_text[i]
         o_l = o[i]
         print(len(x_l), len(y_l), len(o_l))
-        for j in range(len(o_l)):
+        for j in range(len(x_l)):
             if o_l[j] != 10:
                 o_l_text = 'NONE'
                 for k in label_dict:
