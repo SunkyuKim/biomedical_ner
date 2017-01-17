@@ -54,7 +54,59 @@ def test(args):
 
     print("test_loss = {:.3f}, time = {:.3f}"
           .format(loss, end-start))
-    tag(prediction, data_loader.x_text, data_loader.y_text, data_loader.label_dict)
+    get_f1_score(prediction, data_loader.x_text, data_loader.y_text, data_loader.label_dict)
+    # tag(prediction, data_loader.x_text, data_loader.y_text, data_loader.label_dict)
+
+def get_f1_score(prediction, x_text, y_text, label_dict):
+    pred_labels = []
+    for p_s in prediction:
+        pred_labels.append([list(p).index(max(p)) for p in p_s])
+
+    for i in range(len(y_text)):
+        x_one_sentence = x_text[i]
+        y_label_one_sentence = y_text[i]
+        pred_label_one_sentence = pred_labels[i]
+
+        y_entities = []
+        temp_text_list = []
+        temp_type_list = []
+        for token_index in range(len(y_label_one_sentence)):
+            y_label_tokens = y_label_one_sentence[token_index].split("_")
+            if len(y_label_one_sentence) > 1: #type_B or type_I
+                if y_label_tokens[1] == 'B': #type_B
+                    while True:
+                        temp_text_list.append(x_one_sentence[token_index])
+                        temp_type_list.append(y_label_tokens[0])
+                        token_index += 1
+                        y_label_tokens = y_label_one_sentence[token_index].split("_")
+
+                        if len(y_label_tokens) == 1: #'O'
+                            if len(set(temp_type_list)) == 1:
+                                y_entities.append((' '.join(temp_text_list),temp_type_list[0]))
+                            temp_text_list = []
+                            temp_type_list = []
+                            break
+
+        pred_entities = []
+        temp_text_list = []
+        temp_type_list = []
+        for token_index in range(len(pred_label_one_sentence)):
+            pred_label_tokens = pred_label_one_sentence[token_index].split("_")
+            if len(pred_label_one_sentence) > 1: #type_B or type_I
+                if pred_label_tokens[1] == 'B': #type_B
+                    while True:
+                        temp_text_list.append(x_one_sentence[token_index])
+                        temp_type_list.append(pred_label_tokens[0])
+                        token_index += 1
+                        pred_label_tokens = pred_label_one_sentence[token_index].split("_")
+
+                        if len(pred_label_tokens) == 1: #'O'
+                            if len(set(temp_type_list)) == 1:
+                                pred_entities.append((' '.join(temp_text_list),temp_type_list[0]))
+                            temp_text_list = []
+                            temp_type_list = []
+                            break
+        print(y_entities, pred_entities)
 
 def tag(prediction, x_text, y_text, label_dict):
     o = []
