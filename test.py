@@ -58,14 +58,21 @@ def test(args):
     # tag(prediction, data_loader.x_text, data_loader.y_text, data_loader.label_dict)
 
 def get_f1_score(prediction, x_text, y_text, label_dict):
-    pred_labels = []
+    pred_int_labels = []
     for p_s in prediction:
-        pred_labels.append([list(p).index(max(p)) for p in p_s])
+        pred_int_labels.append([list(p).index(max(p)) for p in p_s])
 
     for i in range(len(y_text)):
         x_one_sentence = x_text[i]
         y_label_one_sentence = y_text[i]
-        pred_label_one_sentence = pred_labels[i]
+        pred_int_label_one_sentence = pred_int_labels[i]
+        pred_label_one_sentence = []
+        for j in range(len(x_one_sentence)):
+            pred_label = 'NONE'
+            for k in label_dict:
+                if np.argmax(np.array(label_dict[k])) == pred_int_label_one_sentence[j]:
+                    pred_label = k
+            pred_label_one_sentence.append(pred_label)
 
         y_entities = []
         temp_text_list = []
