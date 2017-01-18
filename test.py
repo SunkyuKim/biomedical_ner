@@ -137,19 +137,26 @@ def get_f1_score(prediction, x_text, y_text, label_dict):
 def __get_f1_score():
     result_list = pickle.load(open("temp_result.pickle"))
 
+    num_pred = 0
+    num_entity = 0
     not_found_list = []
     more_found_list = []
     for d in result_list:
         entity = d['Dictionary']
         pred = d['Prediction']
+        num_entity += len(entity)
+        num_pred += len(pred)
 
         not_found = [e for e in entity if e not in pred]
         more_found = [e for e in pred if e not in entity]
         # print(not_found, more_found)
         not_found_list += not_found
         more_found_list += more_found
-    print(not_found_list[:30])
-    print(more_found_list[:30])
+
+    print(num_entity, num_pred, len(not_found_list), len(more_found_list))
+
+    for a,b in zip(not_found_list[:30], more_found_list[:30]):
+        print(a,"\t",b)
 
 def tag(prediction, x_text, y_text, label_dict):
     o = []
