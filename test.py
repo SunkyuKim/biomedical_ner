@@ -81,7 +81,7 @@ def get_f1_score(prediction, x_text, y_text, label_dict):
         temp_type_list = []
         token_index = 0
         while True:
-            if token_index >= len(y_label_one_sentence):
+            if token_index >= len(x_one_sentence):
                 break
         # for token_index in range(len(y_label_one_sentence)):
             y_label_tokens = y_label_one_sentence[token_index].split("_")
@@ -109,7 +109,7 @@ def get_f1_score(prediction, x_text, y_text, label_dict):
 
         token_index = 0
         while True:
-            if token_index >= len(pred_label_one_sentence):
+            if token_index >= len(x_one_sentence):
                 break
         # for token_index in range(len(pred_label_one_sentence)):
             pred_label_tokens = pred_label_one_sentence[token_index].split("_")
