@@ -79,7 +79,11 @@ def get_f1_score(prediction, x_text, y_text, label_dict):
         y_entities = []
         temp_text_list = []
         temp_type_list = []
-        for token_index in range(len(y_label_one_sentence)):
+        token_index = 0
+        while True:
+            if token_index >= len(y_label_one_sentence):
+                break
+        # for token_index in range(len(y_label_one_sentence)):
             y_label_tokens = y_label_one_sentence[token_index].split("_")
             if len(y_label_tokens) > 1: #type_B or type_I
                 if y_label_tokens[1] == 'B': #type_B
@@ -87,6 +91,8 @@ def get_f1_score(prediction, x_text, y_text, label_dict):
                         temp_text_list.append(x_one_sentence[token_index])
                         temp_type_list.append(y_label_tokens[0])
                         token_index += 1
+                        if token_index == len(y_label_one_sentence):
+                            break
                         y_label_tokens = y_label_one_sentence[token_index].split("_")
 
                         if len(y_label_tokens) == 1: #'O'
@@ -95,6 +101,7 @@ def get_f1_score(prediction, x_text, y_text, label_dict):
                             temp_text_list = []
                             temp_type_list = []
                             break
+            token_index += 1
 
         pred_entities = []
         temp_text_list = []
