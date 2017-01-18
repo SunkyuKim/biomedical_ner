@@ -155,8 +155,10 @@ def __get_f1_score():
 
     print(num_entity, num_pred, len(not_found_list), len(more_found_list))
 
-    for a,b in zip(not_found_list[:30], more_found_list[:30]):
-        print(a,"\t",b)
+    for v in not_found_list[:30]:
+        print(v)
+    for v in more_found_list[:30]:
+        print(v)
 
 def tag(prediction, x_text, y_text, label_dict):
     o = []
