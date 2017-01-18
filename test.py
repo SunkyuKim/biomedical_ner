@@ -9,6 +9,7 @@ from model import Model
 # from utils import DataLoader
 from utils_best import DataLoader
 import procname
+import pickle
 
 def main():
     parser = argparse.ArgumentParser()
@@ -62,6 +63,7 @@ def get_f1_score(prediction, x_text, y_text, label_dict):
     for p_s in prediction:
         pred_int_labels.append([list(p).index(max(p)) for p in p_s])
 
+    result_list = []
     for i in range(len(y_text)):
         x_one_sentence = x_text[i]
         y_label_one_sentence = y_text[i]
@@ -85,6 +87,8 @@ def get_f1_score(prediction, x_text, y_text, label_dict):
                         temp_text_list.append(x_one_sentence[token_index])
                         temp_type_list.append(y_label_tokens[0])
                         token_index += 1
+                        if token_index == len(y_label_one_sentence):
+                            break
                         y_label_tokens = y_label_one_sentence[token_index].split("_")
 
                         if len(y_label_tokens) == 1: #'O'
@@ -105,6 +109,8 @@ def get_f1_score(prediction, x_text, y_text, label_dict):
                         temp_text_list.append(x_one_sentence[token_index])
                         temp_type_list.append(pred_label_tokens[0])
                         token_index += 1
+                        if token_index == len(pred_label_one_sentence):
+                            break
                         pred_label_tokens = pred_label_one_sentence[token_index].split("_")
 
                         if len(pred_label_tokens) == 1: #'O'
@@ -113,7 +119,23 @@ def get_f1_score(prediction, x_text, y_text, label_dict):
                             temp_text_list = []
                             temp_type_list = []
                             break
-        print(y_entities, pred_entities)
+        result_list.append({'Dictionary':y_entities, 'Prediction':pred_entities})
+    pickle.dump(result_list, open("temp_result.pickle","w"))
+    __get_f1_score()
+
+def __get_f1_score():
+    result_list = pickle.load(open("temp_result.pickle"))
+
+    not_found_list = []
+    more_found_list = []
+    for d in result_list:
+        for entity, pred in zip(d['Dictionary'], d['Prediction']):
+            not_found = [e for e in entity if e not in pred]
+            more_found = [e for e in pred if e not in entity]
+            not_found_list += not_found
+            more_found_list += more_found
+    print(not_found_list[:30])
+    print(more_found_list[:30])
 
 def tag(prediction, x_text, y_text, label_dict):
     o = []
