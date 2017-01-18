@@ -135,6 +135,7 @@ def get_f1_score(prediction, x_text, y_text, label_dict):
     __get_f1_score()
 
 def __get_f1_score():
+    count = 100
     result_list = pickle.load(open("temp_result.pickle"))
 
     num_pred = 0
@@ -142,6 +143,8 @@ def __get_f1_score():
     not_found_list = []
     more_found_list = []
     for d in result_list:
+        if count < 150:
+            print(d)
         entity = d['Dictionary']
         pred = d['Prediction']
         num_entity += len(entity)
@@ -155,10 +158,10 @@ def __get_f1_score():
 
     print(num_entity, num_pred, len(not_found_list), len(more_found_list))
 
-    for v in not_found_list[:30]:
-        print(v)
-    for v in more_found_list[:30]:
-        print(v)
+    # for v in not_found_list[:30]:
+    #     print(v)
+    # for v in more_found_list[:30]:
+    #     print(v)
 
 def tag(prediction, x_text, y_text, label_dict):
     o = []
