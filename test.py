@@ -143,8 +143,8 @@ def __get_f1_score():
     not_found_list = []
     more_found_list = []
     for d in result_list:
-        if count < 150:
-            print(d)
+    #     if count < 150:
+    #         print(d)
         entity = d['Dictionary']
         pred = d['Prediction']
         num_entity += len(entity)
@@ -156,12 +156,18 @@ def __get_f1_score():
         not_found_list += not_found
         more_found_list += more_found
 
-    print(num_entity, num_pred, len(not_found_list), len(more_found_list))
+    print("Number of Entity : {}\n"
+          "Number of Prediction : {}\n"
+          "Number of entities not found : {}\n"
+          "Number of entities more found : {}\n".format(num_entity, num_pred, len(not_found_list), len(more_found_list)))
 
-    # for v in not_found_list[:30]:
-    #     print(v)
-    # for v in more_found_list[:30]:
-    #     print(v)
+
+    with open("result.txt", "w") as fw:
+        for v in not_found_list:
+            fw.write(v + "\n")
+        fw.write("----------")
+        for v in more_found_list:
+            fw.write(v + "\n")
 
 def tag(prediction, x_text, y_text, label_dict):
     o = []
