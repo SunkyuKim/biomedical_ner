@@ -143,10 +143,11 @@ def __get_f1_score():
         for entity, pred in zip(d['Dictionary'], d['Prediction']):
             not_found = [e for e in entity if e not in pred]
             more_found = [e for e in pred if e not in entity]
+            print(not_found, more_found)
             not_found_list += not_found
             more_found_list += more_found
-    print(not_found_list[:30])
-    print(more_found_list[:30])
+    # print(not_found_list[:30])
+    # print(more_found_list[:30])
 
 def tag(prediction, x_text, y_text, label_dict):
     o = []
@@ -168,4 +169,5 @@ def tag(prediction, x_text, y_text, label_dict):
                 fw.write("\n")
     fw.close()
 if __name__ == '__main__':
-    main()
+    # main()
+    __get_f1_score()
