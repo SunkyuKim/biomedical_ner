@@ -164,10 +164,10 @@ def __get_f1_score():
 
     with open("result.txt", "w") as fw:
         for v in not_found_list:
-            fw.write(v + "\n")
+            fw.write(v[0] + "\t" + v[1] + "\n")
         fw.write("----------")
         for v in more_found_list:
-            fw.write(v + "\n")
+            fw.write(v[0] + "\t" + v[1] + "\n")
 
 def tag(prediction, x_text, y_text, label_dict):
     o = []
@@ -189,5 +189,5 @@ def tag(prediction, x_text, y_text, label_dict):
                 fw.write("\n")
     fw.close()
 if __name__ == '__main__':
-    # main()
-    __get_f1_score()
+    main()
+    # __get_f1_score()
