@@ -141,11 +141,12 @@ def __get_f1_score():
     more_found_list = []
     for d in result_list:
         for entity, pred in zip(d['Dictionary'], d['Prediction']):
+            print(entity, pred)
             temp_entity = map('\t'.join, entity)
             temp_pred = map('\t'.join, pred)
             not_found = [e for e in temp_entity if e not in temp_pred]
             more_found = [e for e in temp_pred if e not in temp_entity]
-            print(not_found, more_found)
+            # print(not_found, more_found)
             not_found_list += not_found
             more_found_list += more_found
     # print(not_found_list[:30])
