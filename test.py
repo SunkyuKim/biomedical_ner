@@ -26,7 +26,7 @@ def main():
 
     args = parser.parse_args()
     args.restore = get_checkpoint_path(os.path.join(args.save_dir, args.exp_code))
-    if not os.path.isfile(args.restore):
+    if not os.path.isfile(args.restore + ".index"):
         print(args.restore, "is invalid.")
         exit()
     procname.setprocname("NER_Pubmed_TEST")
