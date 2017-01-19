@@ -52,7 +52,7 @@ def test(args):
     sess = tf.Session(config=config)
 
     saver = tf.train.Saver()
-    saver.restore(sess, os.path.join(args.save_dir, args.restore))
+    saver.restore(sess, args.restore)
 
     #tf.initialize_all_variables().run()
     start = time.time()
