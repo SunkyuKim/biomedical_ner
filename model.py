@@ -24,19 +24,21 @@ class Model():
             self.length = tf.cast(tf.reduce_sum(used, reduction_indices=1), tf.int32)
 
         with tf.name_scope("RNN_layer"):
-            cell = rnn_cell.BasicLSTMCell(args.rnn_size)
-            self.initial_state = cell.zero_state(args.batch_size, tf.float32)
+            fw_cell = rnn_cell.BasicLSTMCell(args.rnn_size)
+            bw_cell = rnn_cell.BasicLSTMCell(args.rnn_size)
+            # self.initial_state = cell.zero_state(args.batch_size, tf.float32)
             inputs = tf.split(1, args.seq_length, inputs)
             inputs = [tf.squeeze(input_, [1]) for input_ in inputs]
             # inputs => [batch_size, word_dim] * seqence_length
             # outputs => [batch_size, rnn_size] * seqence_length
-            outputs, states = rnn.rnn(cell, inputs, initial_state=self.initial_state)
+            # outputs, states = rnn.rnn(cell, inputs, initial_state=self.initial_state)
+            outputs, _, _ = rnn.bidirectional_rnn(fw_cell, bw_cell, inputs)
 
             #output => [batch_size*sequence_length, rnn_size]
             output = tf.reshape(tf.transpose(tf.pack(outputs), perm=[1,0,2]), [-1, args.rnn_size])
 
         with tf.name_scope("Softmax_layer"):
-            softmax_w = tf.get_variable("softmax_x", [args.rnn_size, args.class_size])
+            softmax_w = tf.get_variable("softmax_x", [args.rnn_size*2, args.class_size])
             softmax_b = tf.get_variable("softmax_b", [args.class_size])
             #prediction => [batch_size*sequence_length, class_size]
             prediction = tf.nn.softmax(tf.matmul(output, softmax_w) + softmax_b)
