@@ -32,7 +32,7 @@ class Model():
             # inputs => [batch_size, word_dim] * seqence_length
             # outputs => [batch_size, rnn_size] * seqence_length
             # outputs, states = rnn.rnn(cell, inputs, initial_state=self.initial_state)
-            outputs, _, _ = rnn.bidirectional_rnn(fw_cell, bw_cell, inputs)
+            outputs, _, _ = rnn.static_bidirectional_rnn(fw_cell, bw_cell, inputs)
 
             #output => [batch_size*sequence_length, rnn_size]
             output = tf.reshape(tf.transpose(tf.pack(outputs), perm=[1,0,2]), [-1, args.rnn_size])
