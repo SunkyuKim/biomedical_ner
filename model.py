@@ -24,7 +24,7 @@ class Model():
             self.length = tf.cast(tf.reduce_sum(used, reduction_indices=1), tf.int32)
 
         with tf.name_scope("RNN_layer"):
-            cell = rnn_cell.GRUCell(args.rnn_size)
+            cell = rnn_cell.BasicLSTMCell(args.rnn_size)
             self.initial_state = cell.zero_state(args.batch_size, tf.float32)
             inputs = tf.split(1, args.seq_length, inputs)
             inputs = [tf.squeeze(input_, [1]) for input_ in inputs]
