@@ -22,6 +22,7 @@ def main():
     parser.add_argument('--rnn_size', type=int, default=100, help='output nodes of rnn')
     parser.add_argument('--class_size', type=int, default=17, help='class size')
     parser.add_argument('--exp_code', type=str, default=None, help='Experiment code')
+    parser.add_argument('--gpu', type=int, default=1, help='what gpu will you use?')
 
     args = parser.parse_args()
     args.restore = get_checkpoint_path(os.path.join(args.save_dir, args.exp_code))
@@ -29,6 +30,7 @@ def main():
         print(args.restore, "is invalid.")
         exit()
     procname.setprocname("NER_Pubmed_TEST")
+    os.environ['CUDA_VISIBLE_DEVICES'] = str(args.gpu)
     print(args)
     test(args)
 

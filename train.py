@@ -23,6 +23,7 @@ def main():
     parser.add_argument('--class_size', type=int, default=17, help='class size')
     parser.add_argument('--save_every', type=int, default=100, help='save per iteration')
     parser.add_argument('--exp_code', type=str, default=None, help='Experiment code')
+    parser.add_argument('--gpu', type=int, default=1, help='what gpu will you use?')
 
     args = parser.parse_args()
     if args.exp_code == None:
@@ -36,6 +37,7 @@ def main():
         os.mkdir(args.save_dir)
 
     procname.setprocname("NER_Pubmed_TRAIN")
+    os.environ['CUDA_VISIBLE_DEVICES'] = str(args.gpu)
     print(args)
     train(args)
 
