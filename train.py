@@ -22,9 +22,21 @@ def main():
     # parser.add_argument('--class_size', type=int, default=3, help='class size')
     parser.add_argument('--class_size', type=int, default=17, help='class size')
     parser.add_argument('--save_every', type=int, default=100, help='save per iteration')
+    parser.add_argument('--exp_code', type=str, default=None, help='Experiment code')
 
     args = parser.parse_args()
+    if args.exp_code == None:
+        print("YOU SHOULD INPUT EXP_CODE")
+        exit()
+    args.save_dir = os.path.join(args.save_dir, args.exp_code)
+    if os.path.isdir(args.save_dir):
+        print("INPUT EXP_CODE EXISTS ALREADY")
+        exit()
+    else:
+        os.mkdir(args.save_dir)
+
     procname.setprocname("NER_Pubmed_TRAIN")
+    print(args)
     train(args)
 
 def train(args):

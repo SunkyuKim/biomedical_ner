@@ -21,9 +21,15 @@ def main():
     parser.add_argument('--num_epochs', type=int, default=10, help='num_epoch')
     parser.add_argument('--rnn_size', type=int, default=100, help='output nodes of rnn')
     parser.add_argument('--class_size', type=int, default=17, help='class size')
+    parser.add_argument('--exp_code', type=str, default=None, help='Experiment code')
 
     args = parser.parse_args()
+    args.restore = get_checkpoint_path(os.path.join(args.save_dir, args.exp_code))
+    if not os.path.isfile(args.restore):
+        print(args.restore, "is invalid.")
+        exit()
     procname.setprocname("NER_Pubmed_TEST")
+    print(args)
     test(args)
 
 def test(args):
@@ -57,6 +63,12 @@ def test(args):
           .format(loss, end-start))
     get_f1_score(prediction, data_loader.x_text, data_loader.y_text, data_loader.label_dict)
     # tag(prediction, data_loader.x_text, data_loader.y_text, data_loader.label_dict)
+
+def get_checkpoint_path(dir):
+    fr = open(os.path.join(dir, "checkpoint"))
+    l = fr.readline()
+    print(l)
+    return os.path.join(dir, l.split('"')[1])
 
 def get_f1_score(prediction, x_text, y_text, label_dict):
     pred_int_labels = []
