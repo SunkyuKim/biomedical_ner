@@ -32,6 +32,7 @@ class Model():
             # inputs => [batch_size, word_dim] * seqence_length
             # outputs => [batch_size, rnn_size] * seqence_length
             # outputs, states = rnn.rnn(cell, inputs, initial_state=self.initial_state)
+            print(inputs[0].get_shape())
             outputs, states = rnn.bidirectional_dynamic_rnn(fw_cell, bw_cell, inputs)
             outputs = tf.concat(outputs, 2)
 
