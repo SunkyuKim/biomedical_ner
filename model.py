@@ -1,5 +1,5 @@
 import tensorflow as tf
-from tensorflow.ops import rnn, rnn_cell
+from tensorflow.python.ops import rnn, rnn_cell
 
 class Model():
     def __init__(self, args):
