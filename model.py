@@ -27,8 +27,8 @@ class Model():
             fw_cell = rnn_cell.BasicLSTMCell(args.rnn_size)
             bw_cell = rnn_cell.BasicLSTMCell(args.rnn_size)
             # self.initial_state = cell.zero_state(args.batch_size, tf.float32)
-            inputs = tf.split(1, args.seq_length, inputs)
-            inputs = [tf.squeeze(input_, [1]) for input_ in inputs]
+            # inputs = tf.split(1, args.seq_length, inputs)
+            # inputs = [tf.squeeze(input_, [1]) for input_ in inputs]
             # inputs => [batch_size, word_dim] * seqence_length
             # outputs => [batch_size, rnn_size] * seqence_length
             # outputs, states = rnn.rnn(cell, inputs, initial_state=self.initial_state)
