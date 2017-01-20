@@ -10,11 +10,13 @@ class Model():
             self.targets = tf.placeholder(tf.float32, [args.batch_size, args.seq_length, args.class_size])
 
         with tf.name_scope("Embedding_layer"):
-            self.embedding = tf.placeholder(tf.float32, [args.vocab_size, args.rnn_size])
+            #self.embedding = tf.placeholder(tf.float32, [args.vocab_size, args.rnn_size])
             with tf.device("/cpu:0"):
-                embedding = tf.get_variable("embedding", [args.vocab_size, args.rnn_size], trainable=True)
-                tf.assign(embedding, self.embedding)
-                inputs = tf.nn.embedding_lookup(embedding, self.input_data)
+                zero_embedding = tf.Variable(tf.zeros([1, args.embedding_dim]), trainable=False)
+                embedding = tf.get_variable("embedding", [args.vocab_size-1, args.embedding_dim], trainable=True)
+                tf.assign(embedding, args.embedding)
+                lookup_table = tf.concat(0, [zero_embedding, embedding])
+                inputs = tf.nn.embedding_lookup(lookup_table, self.input_data)
             # embedding vector of unused word is filled all of 0.
             # The sum of absolute values of whole values in a embedding vector of a word should be over 0 if this word is not padding word.
             # [batch_size, sequence_size]
@@ -27,17 +29,18 @@ class Model():
             fw_cell = rnn_cell.BasicLSTMCell(args.rnn_size)
             bw_cell = rnn_cell.BasicLSTMCell(args.rnn_size)
             # self.initial_state = cell.zero_state(args.batch_size, tf.float32)
-            # inputs = tf.split(1, args.seq_length, inputs)
-            # inputs = [tf.squeeze(input_, [1]) for input_ in inputs]
+            fw_initial_state = fw_cell.zero_state(args.batch_size, tf.float32)
+            bw_initial_state = bw_cell.zero_state(args.batch_size, tf.float32)
+            inputs = tf.split(1, args.seq_length, inputs)
+            inputs = [tf.squeeze(input_, [1]) for input_ in inputs]
             # inputs => [batch_size, word_dim] * seqence_length
             # outputs => [batch_size, rnn_size] * seqence_length
             # outputs, states = rnn.rnn(cell, inputs, initial_state=self.initial_state)
-            print(inputs[0].get_shape())
-            outputs, states = rnn.bidirectional_dynamic_rnn(fw_cell, bw_cell, inputs)
-            outputs = tf.concat(outputs, 2)
+            outputs, _fw, _bw = rnn.bidirectional_rnn(fw_cell, bw_cell, inputs, initial_state_fw=fw_initial_state, initial_state_bw=bw_initial_state)
+            #outputs = tf.concat(outputs, 2)
 
             #output => [batch_size*sequence_length, rnn_size]
-            output = tf.reshape(tf.transpose(tf.pack(outputs), perm=[1,0,2]), [-1, args.rnn_size])
+            output = tf.reshape(tf.transpose(tf.pack(outputs), perm=[1,0,2]), [-1, args.rnn_size*2])
 
         with tf.name_scope("Softmax_layer"):
             softmax_w = tf.get_variable("softmax_x", [args.rnn_size*2, args.class_size])

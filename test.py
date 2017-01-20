@@ -20,6 +20,7 @@ def main():
     parser.add_argument('--batch_size', type=int, default=1000, help='data directory')
     parser.add_argument('--num_epochs', type=int, default=10, help='num_epoch')
     parser.add_argument('--rnn_size', type=int, default=100, help='output nodes of rnn')
+    parser.add_argument('--embedding_dim', type=int, default=100, help='embedding dimension')
     parser.add_argument('--class_size', type=int, default=17, help='class size')
     parser.add_argument('--exp_code', type=str, default=None, help='Experiment code')
     parser.add_argument('--gpu', type=int, default=1, help='what gpu will you use?')
@@ -39,8 +40,7 @@ def test(args):
 
     args.vocab_size = data_loader.vocab_size
     args.seq_length = data_loader.max_sequence_length
-    args.embedding = np.random.uniform(-10, 10, [args.vocab_size, args.seq_length])
-    args.embedding[0] = np.zeros(args.seq_length)
+    args.embedding = np.random.uniform(-1, 1, [args.vocab_size-1, args.embedding_dim])
 
     x, y = data_loader.full_batch()
     args.batch_size = x.shape[0]

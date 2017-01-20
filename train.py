@@ -19,6 +19,7 @@ def main():
     parser.add_argument('--batch_size', type=int, default=1000, help='data directory')
     parser.add_argument('--num_epochs', type=int, default=10, help='num_epoch')
     parser.add_argument('--rnn_size', type=int, default=100, help='output nodes of rnn')
+    parser.add_argument('--embedding_dim', type=int, default=100, help='embedding dimension')
     # parser.add_argument('--class_size', type=int, default=3, help='class size')
     parser.add_argument('--class_size', type=int, default=17, help='class size')
     parser.add_argument('--save_every', type=int, default=100, help='save per iteration')
@@ -46,8 +47,7 @@ def train(args):
 
     args.vocab_size = data_loader.vocab_size
     args.seq_length = data_loader.max_sequence_length
-    args.embedding = np.random.uniform(-10, 10, [args.vocab_size, args.seq_length])
-    args.embedding[0] = np.zeros(args.seq_length)
+    args.embedding = np.random.uniform(-1, 1, [args.vocab_size-1, args.embedding_dim])
 
     # args.target_embedding_np, args.mutation_embedding_np \
     #     = data_loader.load_embedding_lookup_table()
